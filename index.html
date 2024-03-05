@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Get Current Location and Address</title>
+  </head>
+  <body>
+    <h1>Get Current Location and Address</h1>
+    <p id="location"></p>
+    <p id="address"></p>
+
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        document.getElementById("location").innerHTML =
+          "Latitude: " + latitude + "<br>Longitude: " + longitude;
+
+        // Reverse Geocoding using OpenStreetMap Nominatim
+        var url =
+          "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+          latitude +
+          "&lon=" +
+          longitude;
+          fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            var address = data.display_name;
+            document.getElementById("address").innerHTML =
+              "Address: " + address;
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      getLocation();
+    </script>
+  </body>
+</html>
